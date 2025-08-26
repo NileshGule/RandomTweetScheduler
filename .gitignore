@@ -1,0 +1,41 @@
+# Ignore build output
+bin/
+obj/
+Debug/
+Debug*/
+
+# User-specific files
+*.user
+*.suo
+*.pdb
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+
+# macOS
+.DS_Store
+
+# Logs and databases
+*.log
+*.db
+
+# Secrets
+*.env
+local.settings.json
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Rider
+.idea/
+
+# compiled binaries
+*.exe
+*.dll
+
+# coverage
+coverage/
