@@ -23,7 +23,7 @@ class Program
 
         var hashtags = new[] { "BharosaTumneTodaHai", "DoubleBharosaTodaHai" };
 
-        int daysSince = DaysSince(new DateTime(2024, 6, 27));
+        int daysSince = DateUtils.DaysSince(new DateTime(2024, 6, 27));
 
         // Build tweet text using StringBuilder for clarity and easier maintenance
         var sb = new StringBuilder();
@@ -232,18 +232,6 @@ class Program
             Console.Error.WriteLine(je.ToString());
             return null;
         }
-    }
-
-    /// <summary>
-    /// Returns the whole number of days that have passed since the provided date.
-    /// Uses UTC to avoid local-time ambiguities. If the date is in the future the result will be negative.
-    /// </summary>
-    static int DaysSince(DateTime date)
-    {
-        var utcNow = DateTime.UtcNow;
-        var utcDate = date.Kind == DateTimeKind.Utc ? date : date.ToUniversalTime();
-        var diff = utcNow - utcDate;
-        return (int)Math.Floor(diff.TotalDays);
     }
 }
 
