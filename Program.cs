@@ -74,7 +74,7 @@ class Program
 
         Console.WriteLine("Tweet text:");
         Console.WriteLine(tweetText);
-
+        
         try
         {
             if (!string.IsNullOrWhiteSpace(consumerKey) && !string.IsNullOrWhiteSpace(consumerSecret)
@@ -93,10 +93,10 @@ class Program
 
                 // Post the tweet referencing the uploaded media
                 Console.WriteLine("Posting tweet with media...");
-                // var tweetResponse = await TwitterUtils.PostTweetAsync(tweetText, new[] { mediaId }, consumerKey, consumerSecret, accessToken, accessTokenSecret);
+                var tweetResponse = await TwitterUtils.PostTweetAsync(tweetText, new[] { mediaId }, consumerKey, consumerSecret, accessToken, accessTokenSecret);
 
                 Console.WriteLine("Tweet with image posted successfully:");
-                // Console.WriteLine(tweetResponse);
+                Console.WriteLine(tweetResponse);
                 return;
             }
 
@@ -134,6 +134,9 @@ class Program
         sb.AppendLine();
         sb.AppendLine();
         sb.AppendLine("📄 IRDAI Token no.07-25-012692");
+        sb.AppendLine();
+        sb.AppendLine();
+        sb.AppendLine("/cc @irdaindia, @InsuranceSamad1, @Caag766");
         sb.AppendLine();
         foreach (var tag in hashtags)
         {
