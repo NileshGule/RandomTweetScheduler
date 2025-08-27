@@ -25,19 +25,19 @@ class Program
 
         int daysSince = DateUtils.DaysSince(new DateTime(2024, 6, 27));
 
-        // Build tweet text using StringBuilder for clarity and easier maintenance
+        // Build tweet text using StringBuilder and include emojis for emphasis and readability
         var sb = new StringBuilder();
-        sb.AppendLine("Gentle reminder @AxisMaxLifeIns");
+        sb.AppendLine("🔔 Gentle reminder @AxisMaxLifeIns");
         sb.AppendLine();
-        sb.AppendFormat("It has been {0} days since you overcharged me INR 352000.", daysSince);
+        sb.AppendFormat("⚠️ It has been {0} days since you overcharged me INR 352000.", daysSince);
         sb.AppendLine();
         sb.AppendLine();
-        sb.AppendLine("IRDAI Token no.07-25-012692");
+        sb.AppendLine("📄 IRDAI Token no.07-25-012692");
         sb.AppendLine();
-        // Append each hashtag on its own line
+        // Append each hashtag on its own line with a small bullet emoji
         foreach (var tag in hashtags)
         {
-            sb.AppendLine('#' + tag);
+            sb.AppendLine("🔹 #" + tag);
         }
 
         string tweetText = sb.ToString();
