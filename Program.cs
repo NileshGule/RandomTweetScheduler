@@ -2,18 +2,74 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 class Program
 {
     static async Task Main(string[] args)
     {
-        // Prefer OAuth1 user credentials (required to POST tweets)
+        AnsiConsole.MarkupLine("[bold underline blue]Welcome to the Random Tweet Scheduler[/]");
+    AnsiConsole.MarkupLine("This will post a Tweet.");
+    AnsiConsole.MarkupLine("You can select the kind of Tweet.");
+
+    Console.WriteLine();
+
+    AnsiConsole.MarkupLine("Let's get started!");
+
+    Console.WriteLine();
+
+    bool continueTweeting;
+
+        do
+        {
+            var selection = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Please select an option:")
+                        .AddChoices(new[]
+                        {
+                    "1. Reminder Since June 2024",
+                    "2. Reply with Meme",
+                    "3. Reply without Meme"
+                        }));
+
+            // Call a method depending on the choice
+            switch (selection)
+            {
+                case "1. Reminder Since June 2024":
+                    await OptionOne();
+                    break;
+                case "2. Reply with Meme":
+                    OptionTwo();
+                    break;
+                case "3. Reply without Meme":
+                    OptionThree();
+                    break;
+            }
+
+            continueTweeting = AnsiConsole.Confirm("Would you like to continue to Tweet more?");
+        Console.WriteLine();
+        
+        } while (continueTweeting);
+    }
+
+    static async Task OptionTwo()
+    {
+        Console.WriteLine("Option 2");
+     }
+
+    static async Task OptionThree()
+    { 
+        Console.WriteLine("Option 3");
+    }
+
+    // OptionOne: build reminder tweet, upload media and post tweet
+    static async Task OptionOne()
+    {
         var consumerKey = Environment.GetEnvironmentVariable("TWITTER_CONSUMER_KEY");
         var consumerSecret = Environment.GetEnvironmentVariable("TWITTER_CONSUMER_SECRET");
         var accessToken = Environment.GetEnvironmentVariable("TWITTER_ACCESS_TOKEN");
         var accessTokenSecret = Environment.GetEnvironmentVariable("TWITTER_ACCESS_TOKEN_SECRET");
 
-        // Build the reminder text and return the image path
         var tweetText = ReminderSinceJune2024();
 
         Console.WriteLine("Tweet text:");
@@ -27,7 +83,7 @@ class Program
                 // Hardcoded image path for now - change to any local image path on your system
                 var imagePath = "/Users/nilesh/Dropbox/Axis Max Life Escalation/response-pradeep-kumar-Saturday-23-Aug-2025-05.png"; // <-- update this path
 
-                // Upload media (extracted into helper)
+                // Upload media (reuses helper)
                 var mediaId = await UploadMediaAndReturnIdAsync(imagePath, consumerKey, consumerSecret, accessToken, accessTokenSecret);
                 if (string.IsNullOrWhiteSpace(mediaId))
                 {
@@ -35,12 +91,12 @@ class Program
                     return;
                 }
 
-                // 2) Post the tweet referencing the uploaded media
+                // Post the tweet referencing the uploaded media
                 Console.WriteLine("Posting tweet with media...");
-                var tweetResponse = await TwitterUtils.PostTweetAsync(tweetText, new[] { mediaId }, consumerKey, consumerSecret, accessToken, accessTokenSecret);
+                // var tweetResponse = await TwitterUtils.PostTweetAsync(tweetText, new[] { mediaId }, consumerKey, consumerSecret, accessToken, accessTokenSecret);
 
                 Console.WriteLine("Tweet with image posted successfully:");
-                Console.WriteLine(tweetResponse);
+                // Console.WriteLine(tweetResponse);
                 return;
             }
 
