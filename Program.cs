@@ -13,53 +13,27 @@ class Program
         var accessToken = Environment.GetEnvironmentVariable("TWITTER_ACCESS_TOKEN");
         var accessTokenSecret = Environment.GetEnvironmentVariable("TWITTER_ACCESS_TOKEN_SECRET");
 
-        var hashtags = new[] { "BharosaTumneTodaHai", "DoubleBharosaTodaHai" };
-
-        int daysSince = DateUtils.DaysSince(new DateTime(2024, 6, 27));
-
-        // Build tweet text using StringBuilder and include emojis for emphasis and readability
-        var sb = new StringBuilder();
-        sb.AppendLine("🔔 Gentle reminder @AxisMaxLifeIns");
-        sb.AppendLine();
-        sb.AppendFormat("⚠️ It has been {0} days since you overcharged me INR 352000.", daysSince);
-        sb.AppendLine();
-        sb.AppendLine();
-        sb.AppendLine("📄 IRDAI Token no.07-25-012692");
-        sb.AppendLine();
-        foreach (var tag in hashtags)
-        {
-            sb.AppendLine("🔹 #" + tag);
-        }
-
-        string tweetText = sb.ToString();
+        // Build the reminder text and return the image path
+        var tweetText = ReminderSinceJune2024();
 
         Console.WriteLine("Tweet text:");
         Console.WriteLine(tweetText);
-
-        // Hardcoded image path for now - change to any local image path on your system
-        var imagePath = "/Users/nilesh/Dropbox/Axis Max Life Escalation/response-pradeep-kumar-Saturday-23-Aug-2025-05.png"; // <-- update this path
 
         try
         {
             if (!string.IsNullOrWhiteSpace(consumerKey) && !string.IsNullOrWhiteSpace(consumerSecret)
                 && !string.IsNullOrWhiteSpace(accessToken) && !string.IsNullOrWhiteSpace(accessTokenSecret))
             {
-                // 1) Upload media to Twitter via TwitterUtils (v1.1 upload endpoint under the hood)
-                if (!System.IO.File.Exists(imagePath))
-                {
-                    Console.Error.WriteLine($"Image not found at path: {imagePath}");
-                    return;
-                }
+                // Hardcoded image path for now - change to any local image path on your system
+                var imagePath = "/Users/nilesh/Dropbox/Axis Max Life Escalation/response-pradeep-kumar-Saturday-23-Aug-2025-05.png"; // <-- update this path
 
-                Console.WriteLine($"Uploading media from: {imagePath}");
-                var mediaId = await TwitterUtils.UploadMediaAsync(imagePath, consumerKey, consumerSecret, accessToken, accessTokenSecret);
+                // Upload media (extracted into helper)
+                var mediaId = await UploadMediaAndReturnIdAsync(imagePath, consumerKey, consumerSecret, accessToken, accessTokenSecret);
                 if (string.IsNullOrWhiteSpace(mediaId))
                 {
-                    Console.Error.WriteLine("Failed to upload media, no media_id returned.");
+                    // Upload helper already logged the error
                     return;
                 }
-
-                Console.WriteLine($"Media uploaded successfully, media_id: {mediaId}");
 
                 // 2) Post the tweet referencing the uploaded media
                 Console.WriteLine("Posting tweet with media...");
@@ -87,6 +61,54 @@ class Program
             Console.Error.WriteLine("Unexpected error:");
             Console.Error.WriteLine(ex.ToString());
         }
+    }
+
+    // Extracted helper that builds the reminder tweet and returns the image path
+    static string ReminderSinceJune2024()
+    {
+        var hashtags = new[] { "BharosaTumneTodaHai", "DoubleBharosaTodaHai" };
+
+        int daysSince = DateUtils.DaysSince(new DateTime(2024, 6, 27));
+
+        // Build tweet text using StringBuilder and include emojis for emphasis and readability
+        var sb = new StringBuilder();
+        sb.AppendLine("🔔 Gentle reminder @AxisMaxLifeIns");
+        sb.AppendLine();
+        sb.AppendFormat("⚠️ It has been {0} days since you overcharged me INR 352000.", daysSince);
+        sb.AppendLine();
+        sb.AppendLine();
+        sb.AppendLine("📄 IRDAI Token no.07-25-012692");
+        sb.AppendLine();
+        foreach (var tag in hashtags)
+        {
+            sb.AppendLine("🔹 #" + tag);
+        }
+
+        string tweetText = sb.ToString();
+
+        return tweetText;
+    }
+
+    // Reusable helper that validates the file, uploads it via TwitterUtils and returns the media id (or null on failure)
+    static async Task<string?> UploadMediaAndReturnIdAsync(string imagePath, string consumerKey, string consumerSecret, string accessToken, string accessTokenSecret)
+    {
+        if (!System.IO.File.Exists(imagePath))
+        {
+            Console.Error.WriteLine($"Image not found at path: {imagePath}");
+            return null;
+        }
+
+        Console.WriteLine($"Uploading media from: {imagePath}");
+        var mediaId = await TwitterUtils.UploadMediaAsync(imagePath, consumerKey, consumerSecret, accessToken, accessTokenSecret);
+
+        if (string.IsNullOrWhiteSpace(mediaId))
+        {
+            Console.Error.WriteLine("Failed to upload media, no media_id returned.");
+            return null;
+        }
+
+        Console.WriteLine($"Media uploaded successfully, media_id: {mediaId}");
+        return mediaId;
     }
 }
 
