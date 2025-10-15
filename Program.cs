@@ -136,7 +136,7 @@ class Program
         sb.AppendLine("📄 IRDAI Token no.07-25-012692");
         sb.AppendLine();
         sb.AppendLine();
-        sb.AppendLine("/cc @irdaindia, @InsuranceSamad1, @Caag766");
+        sb.AppendLine("/cc @irdaindia, @Caag766");
         sb.AppendLine();
         foreach (var tag in hashtags)
         {
